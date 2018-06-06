@@ -414,7 +414,7 @@ export class DemoComponent implements OnInit, OnDestroy, AfterViewInit {
 
   loadMapElements() {
 
-    let imageUrl = '../assets/img/buildings/floor_1.png';
+    let imageUrl = '../assets/img/buildings/office.png';
     let imageBounds: L.LatLngBoundsExpression = [[43.5439288935699, 1.51069521903992], [43.5439327819489, 1.51149988174438], [43.5433728527995, 1.51151597499847], [43.5433689643845, 1.51070058345795]];
     L.imageOverlay(imageUrl, imageBounds).setOpacity(1).addTo(this.floor_1);
 
