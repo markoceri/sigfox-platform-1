@@ -38,40 +38,37 @@ export class DemoComponent implements OnInit, OnDestroy, AfterViewInit {
   private marker: L.Marker;
   private circle: L.Circle;
 
-  private floor_1: L.LayerGroup = new L.LayerGroup();
-  private floor_2: L.LayerGroup = new L.LayerGroup();
-  private floor_3: L.LayerGroup = new L.LayerGroup();
-  private floor_4: L.LayerGroup = new L.LayerGroup();
+  private building: L.LayerGroup = new L.LayerGroup();
 
-  private circle_1_1: L.CircleMarkerOptions = {
+  private circle_1: L.CircleMarkerOptions = {
     color: '#000000',
     weight: 1,
     fillColor: '#e7e35a',
     fillOpacity: 0.3
   };
 
-  private circle_1_2: L.CircleMarkerOptions = {
+  private circle_2: L.CircleMarkerOptions = {
     color: '#000000',
     weight: 1,
     fillColor: '#58dcd6',
     fillOpacity: 0.3
   };
 
-  private circle_2_1: L.CircleMarkerOptions = {
+  private circle_3: L.CircleMarkerOptions = {
     color: '#000000',
     weight: 1,
     fillColor: '#9f29a9',
     fillOpacity: 0.3
   };
 
-  private circle_3_1: L.CircleMarkerOptions = {
+  private circle_4: L.CircleMarkerOptions = {
     color: '#000000',
     weight: 1,
     fillColor: '#4272ca',
     fillOpacity: 0.3
   };
 
-  private circle_4_1: L.CircleMarkerOptions = {
+  private circle_5: L.CircleMarkerOptions = {
     color: '#000000',
     weight: 1,
     fillColor: '#31af23',
@@ -104,14 +101,11 @@ export class DemoComponent implements OnInit, OnDestroy, AfterViewInit {
 
   private layersControl = {
     baseLayers: {
-      'Floor 1': this.floor_1,
-      'Floor 2': this.floor_2,
-      'Floor 3': this.floor_3,
-      'Floor 4': this.floor_4,
+      'Building': this.building,
     }
   };
 
-  private room_1_1: any = {
+  private beacon_1: any = {
     'type': 'Feature',
     'geometry': {
       'type': 'Polygon',
@@ -150,7 +144,7 @@ export class DemoComponent implements OnInit, OnDestroy, AfterViewInit {
     }
   };
 
-  private room_1_2: any = {
+  private beacon_2: any = {
     'type': 'Feature',
     'geometry': {
       'type': 'Polygon',
@@ -181,7 +175,7 @@ export class DemoComponent implements OnInit, OnDestroy, AfterViewInit {
     }
   };
 
-  private room_2_1: any = {
+  private beacon_3: any = {
     'type': 'Feature',
     'geometry': {
       'type': 'Polygon',
@@ -212,7 +206,7 @@ export class DemoComponent implements OnInit, OnDestroy, AfterViewInit {
     }
   };
 
-  private room_3_1: any = {
+  private beacon_4: any = {
     'type': 'Feature',
     'geometry': {
       'type': 'Polygon',
@@ -243,7 +237,7 @@ export class DemoComponent implements OnInit, OnDestroy, AfterViewInit {
     }
   };
 
-  private room_4_1: any = {
+  private beacon_5: any = {
     'type': 'Feature',
     'geometry': {
       'type': 'Polygon',
@@ -278,8 +272,7 @@ export class DemoComponent implements OnInit, OnDestroy, AfterViewInit {
 
   constructor(private rt: RealTime,
               private userApi: UserApi) {
-    this.deviceId = '';
-    //this.deviceId = '19FC4E';
+    this.deviceId = '19FB8D';
   }
 
   ngOnInit(): void {
@@ -306,15 +299,9 @@ export class DemoComponent implements OnInit, OnDestroy, AfterViewInit {
       this.map.removeLayer(this.circle);
     }
 
-    this.map.removeLayer(this.room_1_1);
-    this.map.removeLayer(this.room_1_2);
-    this.map.removeLayer(this.room_2_1);
-    this.map.removeLayer(this.room_3_1);
-    this.map.removeLayer(this.room_4_1);
-
-    this.map.removeLayer(this.floor_2);
-    this.map.removeLayer(this.floor_3);
-    this.map.removeLayer(this.floor_4);
+    this.map.removeLayer(this.beacon_1);
+    this.map.removeLayer(this.beacon_2);
+    this.map.removeLayer(this.beacon_3);
   }
 
   setup(): void {
@@ -353,40 +340,40 @@ export class DemoComponent implements OnInit, OnDestroy, AfterViewInit {
         this.geolocs[0].Message.data_parsed.forEach((p: Property) => {
           if (p.key === 'beaconId') {
             if (p.value === '00001') {
-              this.floor_1.addTo(this.map);
-              //this.room_1_2.addTo(this.map);
+              //this.building.addTo(this.map);
+              //this.beacon_2.addTo(this.map);
               this.markerIconOptions.iconUrl = 'assets/img/markers/marker-icon-blue.png';
               this.marker = L.marker(new LatLng(this.geolocs[0].location.lat, this.geolocs[0].location.lng), {icon: icon(this.markerIconOptions)}).addTo(this.map);
-              this.circle = L.circle(new LatLng(this.geolocs[0].location.lat, this.geolocs[0].location.lng), radius, this.circle_1_2).addTo(this.map);
-              this.marker.bindPopup('Floor 1 - ' + this.deviceId).openPopup();
+              this.circle = L.circle(new LatLng(this.geolocs[0].location.lat, this.geolocs[0].location.lng), radius, this.circle_1).addTo(this.map);
+              this.marker.bindPopup('Beacon 1 - ' + this.deviceId).openPopup();
             } else if (p.value === '00002') {
-              this.floor_1.addTo(this.map);
-              //this.room_1_1.addTo(this.map);
+              //this.building.addTo(this.map);
+              //this.beacon_1.addTo(this.map);
               this.markerIconOptions.iconUrl = 'assets/img/markers/marker-icon-yellow.png';
               this.marker = L.marker(new LatLng(this.geolocs[0].location.lat, this.geolocs[0].location.lng), {icon: icon(this.markerIconOptions)}).addTo(this.map);
-              this.circle = L.circle(new LatLng(this.geolocs[0].location.lat, this.geolocs[0].location.lng), radius, this.circle_1_1).addTo(this.map);
-              this.marker.bindPopup('Floor 1 - ' + this.deviceId).openPopup();
+              this.circle = L.circle(new LatLng(this.geolocs[0].location.lat, this.geolocs[0].location.lng), radius, this.circle_1).addTo(this.map);
+              this.marker.bindPopup('Beacon 1 - ' + this.deviceId).openPopup();
             } else if (p.value === '00003') {
-              this.floor_2.addTo(this.map);
-              //this.room_2_1.addTo(this.map);
+              //this.building.addTo(this.map);
+              //this.beacon_3.addTo(this.map);
               this.markerIconOptions.iconUrl = 'assets/img/markers/marker-icon-violet.png';
               this.marker = L.marker(new LatLng(this.geolocs[0].location.lat, this.geolocs[0].location.lng), {icon: icon(this.markerIconOptions)}).addTo(this.map);
-              this.circle = L.circle(new LatLng(this.geolocs[0].location.lat, this.geolocs[0].location.lng), radius, this.circle_2_1).addTo(this.map);
-              this.marker.bindPopup('Floor 2 - ' + this.deviceId).openPopup();
+              this.circle = L.circle(new LatLng(this.geolocs[0].location.lat, this.geolocs[0].location.lng), radius, this.circle_2).addTo(this.map);
+              this.marker.bindPopup('Beacon 2 - ' + this.deviceId).openPopup();
             } else if (p.value === '00004') {
-              this.floor_3.addTo(this.map);
+              //this.building.addTo(this.map);
               //this.room_3_1.addTo(this.map);
               this.markerIconOptions.iconUrl = 'assets/img/markers/marker-icon-blue.png';
               this.marker = L.marker(new LatLng(this.geolocs[0].location.lat, this.geolocs[0].location.lng), {icon: icon(this.markerIconOptions)}).addTo(this.map);
-              this.circle = L.circle(new LatLng(this.geolocs[0].location.lat, this.geolocs[0].location.lng), radius, this.circle_3_1).addTo(this.map);
-              this.marker.bindPopup('Floor 3 - ' + this.deviceId).openPopup();
+              this.circle = L.circle(new LatLng(this.geolocs[0].location.lat, this.geolocs[0].location.lng), radius, this.circle_3).addTo(this.map);
+              this.marker.bindPopup('Beacon 3 - ' + this.deviceId).openPopup();
             } else if (p.value === '00005') {
-              this.floor_4.addTo(this.map);
+              //this.building.addTo(this.map);
               //this.room_4_1.addTo(this.map);
               this.markerIconOptions.iconUrl = 'assets/img/markers/marker-icon-green.png';
               this.marker = L.marker(new LatLng(this.geolocs[0].location.lat, this.geolocs[0].location.lng), {icon: icon(this.markerIconOptions)}).addTo(this.map);
-              this.circle = L.circle(new LatLng(this.geolocs[0].location.lat, this.geolocs[0].location.lng), radius, this.circle_4_1).addTo(this.map);
-              this.marker.bindPopup('Floor 4 - ' + this.deviceId).openPopup();
+              this.circle = L.circle(new LatLng(this.geolocs[0].location.lat, this.geolocs[0].location.lng), radius, this.circle_4).addTo(this.map);
+              this.marker.bindPopup('Beacon 4 - ' + this.deviceId).openPopup();
             }
           }
         });
@@ -414,56 +401,45 @@ export class DemoComponent implements OnInit, OnDestroy, AfterViewInit {
 
   loadMapElements() {
 
-    let imageUrl = '../assets/img/buildings/office.png';
-    let imageBounds: L.LatLngBoundsExpression = [[43.5439288935699, 1.51069521903992], [43.5439327819489, 1.51149988174438], [43.5433728527995, 1.51151597499847], [43.5433689643845, 1.51070058345795]];
-    L.imageOverlay(imageUrl, imageBounds).setOpacity(1).addTo(this.floor_1);
+    const imageUrl = '../assets/img/buildings/office.png';
+    const imageBounds: L.LatLngBoundsExpression = [[51.480659, -0.440732], [51.480297, -0.440000]];
+    //const imageBounds: L.LatLngBoundsExpression = [[51.480656, -0.440703], [51.480551, -0.440069], [51.480300, -0.439986], [51.480309, -0.440737]];
+    L.imageOverlay(imageUrl, imageBounds).setOpacity(1).addTo(this.building);
 
-    imageUrl = '../assets/img/buildings/floor_2.png';
-    imageBounds = [[43.5439288935699, 1.51069521903992], [43.5439327819489, 1.51149988174438], [43.5433728527995, 1.51151597499847], [43.5433689643845, 1.51070058345795]];
-    L.imageOverlay(imageUrl, imageBounds).setOpacity(1).addTo(this.floor_2);
-
-    imageUrl = '../assets/img/buildings/floor_3.png';
-    imageBounds = [[43.5439288935699, 1.51069521903992], [43.5439327819489, 1.51149988174438], [43.5433728527995, 1.51151597499847], [43.5433689643845, 1.51070058345795]];
-    L.imageOverlay(imageUrl, imageBounds).setOpacity(1).addTo(this.floor_3);
-
-    imageUrl = '../assets/img/buildings/floor_4.png';
-    imageBounds = [[43.5439288935699, 1.51069521903992], [43.5439327819489, 1.51149988174438], [43.5433728527995, 1.51151597499847], [43.5433689643845, 1.51070058345795]];
-    L.imageOverlay(imageUrl, imageBounds).setOpacity(1).addTo(this.floor_4);
-
-    this.room_1_1 = L.geoJSON(this.room_1_1).setStyle({
+    this.beacon_1 = L.geoJSON(this.beacon_1).setStyle({
       'color': '#000000',
       'weight': 2,
       'fillColor': '#e7e35a',
       'fillOpacity': 0.5
-    }).bindPopup('Floor 1');
+    }).bindPopup('Beacon 1');
 
-    this.room_1_2 = L.geoJSON(this.room_1_2).setStyle({
+    this.beacon_2 = L.geoJSON(this.beacon_2).setStyle({
       'color': '#000000',
       'weight': 2,
       'fillColor': '#58dcd6',
       'fillOpacity': 0.5
-    }).bindPopup('Floor 1 - Showroom');
+    }).bindPopup('Beacon 1 - Showroom');
 
-    this.room_2_1 = L.geoJSON(this.room_2_1).setStyle({
+    this.beacon_3 = L.geoJSON(this.beacon_3).setStyle({
       'color': '#000000',
       'weight': 2,
       'fillColor': '#9f29a9',
       'fillOpacity': 0.5
-    }).bindPopup('Floor 2');
+    }).bindPopup('Beacon 2');
 
-    this.room_3_1 = L.geoJSON(this.room_3_1).setStyle({
+    this.beacon_4 = L.geoJSON(this.beacon_4).setStyle({
       'color': '#000000',
       'weight': 2,
       'fillColor': '#4272ca',
       'fillOpacity': 0.5
-    }).bindPopup('Floor 3');
+    }).bindPopup('Beacon 3');
 
-    this.room_4_1 = L.geoJSON(this.room_4_1).setStyle({
+    this.beacon_5 = L.geoJSON(this.beacon_5).setStyle({
       'color': '#000000',
       'weight': 2,
       'fillColor': '#31af23',
       'fillOpacity': 0.5
-    }).bindPopup('Floor 4');
+    }).bindPopup('Beacon 4');
   }
 
   /**
@@ -485,6 +461,9 @@ export class DemoComponent implements OnInit, OnDestroy, AfterViewInit {
       this.rt.onAuthenticated().subscribe(() => this.setup());
       this.rt.onReady().subscribe();
     }
+
+    // Set office building plans
+    this.building.addTo(this.map);
 
     console.log('Map ready!');
   }
