@@ -24,12 +24,12 @@ export class DemoComponent implements OnInit, OnDestroy, AfterViewInit {
   private geolocSub: Subscription;
   private geolocRef: FireLoopRef<Geoloc>;
 
-  private messages: Message[] = [];
+  public messages: Message[] = [];
   private messageSub: Subscription;
   private messageRef: FireLoopRef<Message>;
 
   // Flags
-  private messagesReady = false;
+  public messagesReady = false;
 
   // Map
   private map: L.Map;
@@ -85,7 +85,7 @@ export class DemoComponent implements OnInit, OnDestroy, AfterViewInit {
     popupAnchor:  [-2, -40] // point from which the popup should open relative to the iconAnchor
   };
 
-  private mapOptions = {
+  public mapOptions = {
     layers: [
       /*tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { maxZoom: 21, maxNativeZoom: 18, attribution: '© OpenStreetMap contributors' }),*/
       tileLayer('http://{s}.google.com/vt/lyrs=m&x={x}&y={y}&z={z}', {
@@ -99,7 +99,7 @@ export class DemoComponent implements OnInit, OnDestroy, AfterViewInit {
     trackResize: false
   };
 
-  private layersControl = {
+  public layersControl = {
     baseLayers: {
       'Building': this.building,
     }
@@ -268,7 +268,7 @@ export class DemoComponent implements OnInit, OnDestroy, AfterViewInit {
     }
   };
 
-  private deviceId: string;
+  public deviceId: string;
 
   constructor(private rt: RealTime,
               private userApi: UserApi) {
