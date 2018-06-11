@@ -83,7 +83,9 @@
                     </div>
                   </td>
                   <td class="text-center text-device">
-                    <span>{{message.deviceId}}</span>
+                    <a [routerLink]="['/messages', message.deviceId]">
+                      <strong class="text-device">{{message.deviceId}}</strong>
+                    </a>
                     <br>
                     <small *ngIf="message.Device">{{message.Device.name}}</small>
                   </td>
