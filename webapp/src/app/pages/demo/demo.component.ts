@@ -43,7 +43,7 @@ export class DemoComponent implements OnInit, OnDestroy, AfterViewInit {
   private circle_1: L.CircleMarkerOptions = {
     color: '#000000',
     weight: 1,
-    fillColor: '#e7e35a',
+    fillColor: '#eeeeea',
     fillOpacity: 0.3
   };
 
@@ -57,7 +57,7 @@ export class DemoComponent implements OnInit, OnDestroy, AfterViewInit {
   private circle_3: L.CircleMarkerOptions = {
     color: '#000000',
     weight: 1,
-    fillColor: '#9f29a9',
+    fillColor: '#dec21c',
     fillOpacity: 0.3
   };
 
@@ -272,7 +272,7 @@ export class DemoComponent implements OnInit, OnDestroy, AfterViewInit {
 
   constructor(private rt: RealTime,
               private userApi: UserApi) {
-    this.deviceId = '19FB8D';
+    this.deviceId = '19FC14';
   }
 
   ngOnInit(): void {
@@ -299,9 +299,9 @@ export class DemoComponent implements OnInit, OnDestroy, AfterViewInit {
       this.map.removeLayer(this.circle);
     }
 
-    this.map.removeLayer(this.beacon_1);
+    /*this.map.removeLayer(this.beacon_1);
     this.map.removeLayer(this.beacon_2);
-    this.map.removeLayer(this.beacon_3);
+    this.map.removeLayer(this.beacon_3);*/
   }
 
   setup(): void {
@@ -339,28 +339,28 @@ export class DemoComponent implements OnInit, OnDestroy, AfterViewInit {
 
         this.geolocs[0].Message.data_parsed.forEach((p: Property) => {
           if (p.key === 'beaconId') {
-            if (p.value === '00001') {
+            if (p.value === '0000a') {
               //this.building.addTo(this.map);
               //this.beacon_2.addTo(this.map);
-              this.markerIconOptions.iconUrl = 'assets/img/markers/marker-icon-blue.png';
+              this.markerIconOptions.iconUrl = 'assets/img/markers/marker-icon-grey.png';
               this.marker = L.marker(new LatLng(this.geolocs[0].location.lat, this.geolocs[0].location.lng), {icon: icon(this.markerIconOptions)}).addTo(this.map);
               this.circle = L.circle(new LatLng(this.geolocs[0].location.lat, this.geolocs[0].location.lng), radius, this.circle_1).addTo(this.map);
-              this.marker.bindPopup('Beacon 1 - ' + this.deviceId).openPopup();
-            } else if (p.value === '00002') {
+              this.marker.bindPopup('You are at level 5 - ' + this.deviceId).openPopup();
+            } else if (p.value === '0000b') {
               //this.building.addTo(this.map);
               //this.beacon_1.addTo(this.map);
-              this.markerIconOptions.iconUrl = 'assets/img/markers/marker-icon-yellow.png';
-              this.marker = L.marker(new LatLng(this.geolocs[0].location.lat, this.geolocs[0].location.lng), {icon: icon(this.markerIconOptions)}).addTo(this.map);
-              this.circle = L.circle(new LatLng(this.geolocs[0].location.lat, this.geolocs[0].location.lng), radius, this.circle_1).addTo(this.map);
-              this.marker.bindPopup('Beacon 1 - ' + this.deviceId).openPopup();
-            } else if (p.value === '00003') {
-              //this.building.addTo(this.map);
-              //this.beacon_3.addTo(this.map);
-              this.markerIconOptions.iconUrl = 'assets/img/markers/marker-icon-violet.png';
+              this.markerIconOptions.iconUrl = 'assets/img/markers/marker-icon-blue.png';
               this.marker = L.marker(new LatLng(this.geolocs[0].location.lat, this.geolocs[0].location.lng), {icon: icon(this.markerIconOptions)}).addTo(this.map);
               this.circle = L.circle(new LatLng(this.geolocs[0].location.lat, this.geolocs[0].location.lng), radius, this.circle_2).addTo(this.map);
-              this.marker.bindPopup('Beacon 2 - ' + this.deviceId).openPopup();
-            } else if (p.value === '00004') {
+              this.marker.bindPopup('You are at level 3 - ' + this.deviceId).openPopup();
+            } else if (p.value === '0000c') {
+              //this.building.addTo(this.map);
+              //this.beacon_3.addTo(this.map);
+              this.markerIconOptions.iconUrl = 'assets/img/markers/marker-icon-yellow.png';
+              this.marker = L.marker(new LatLng(this.geolocs[0].location.lat, this.geolocs[0].location.lng), {icon: icon(this.markerIconOptions)}).addTo(this.map);
+              this.circle = L.circle(new LatLng(this.geolocs[0].location.lat, this.geolocs[0].location.lng), radius, this.circle_3).addTo(this.map);
+              this.marker.bindPopup('You are at level 1 (ground) - ' + this.deviceId).openPopup();
+            }/* else if (p.value === '00004') {
               //this.building.addTo(this.map);
               //this.room_3_1.addTo(this.map);
               this.markerIconOptions.iconUrl = 'assets/img/markers/marker-icon-blue.png';
@@ -374,7 +374,7 @@ export class DemoComponent implements OnInit, OnDestroy, AfterViewInit {
               this.marker = L.marker(new LatLng(this.geolocs[0].location.lat, this.geolocs[0].location.lng), {icon: icon(this.markerIconOptions)}).addTo(this.map);
               this.circle = L.circle(new LatLng(this.geolocs[0].location.lat, this.geolocs[0].location.lng), radius, this.circle_4).addTo(this.map);
               this.marker.bindPopup('Beacon 4 - ' + this.deviceId).openPopup();
-            }
+            }*/
           }
         });
       }
