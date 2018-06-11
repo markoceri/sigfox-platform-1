@@ -1,6 +1,6 @@
 module.exports = (app: any) => {
 
-  const runScript = true;
+  const runScript = false;
 
   if (runScript) {
     const Beacon = app.models.Beacon;
