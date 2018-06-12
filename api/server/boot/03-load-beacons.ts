@@ -36,9 +36,9 @@ module.exports = (app: any) => {
         });
 
         const beacons_3 = [
-          {id: '0000a', type: 'sigfox', location: new app.loopback.GeoPoint({lat: 51.480473, lng: -0.440661})},
-          {id: '0000b', type: 'sigfox', location: new app.loopback.GeoPoint({lat: 51.480448, lng: -0.440493})},
-          {id: '0000c', type: 'sigfox', location: new app.loopback.GeoPoint({lat: 51.480508, lng: -0.440181})}
+          {id: '0000a', type: 'sigfox', location: new app.loopback.GeoPoint({lat: 51.480369, lng: -0.440634})},
+          {id: '0000b', type: 'sigfox', location: new app.loopback.GeoPoint({lat: 51.480448, lng: -0.440670})},
+          {id: '0000c', type: 'sigfox', location: new app.loopback.GeoPoint({lat: 51.480356, lng: -0.440664})}
         ];
         beacons_3.forEach((beacon) => {
           Beacon.create(beacon, (err: any, beacon: any) => {
