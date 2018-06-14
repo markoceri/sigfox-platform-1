@@ -1001,7 +1001,7 @@ export class CustomDashboardComponent implements OnInit, OnDestroy {
   }
 
   loadWidgets(): void {
-    this.dashboardApi.getWidgets(this.dashboard.id, {order: 'createdAt DESC'}).subscribe((widgets: any[]) => {
+    this.dashboardApi.getWidgets(this.dashboard.id, {order: 'createdAt ASC'}).subscribe((widgets: any[]) => {
       this.widgets = widgets;
       if (this.widgets) {
         this.dashboardReady = false;
@@ -1496,4 +1496,3 @@ export class CustomDashboardComponent implements OnInit, OnDestroy {
 
 
 }
-
