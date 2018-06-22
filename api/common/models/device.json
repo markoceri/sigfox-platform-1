@@ -32,6 +32,12 @@
       "id": true,
       "required": true
     },
+    "pek": {
+      "type": "string",
+      "pattern": "([a-fA-F0-9]{32})$",
+      "min": 32,
+      "max": 32
+    },
     "name": {
       "type": "string"
     },
@@ -39,7 +45,10 @@
       "type": "number"
     },
     "data_downlink": {
-      "type": "string"
+      "type": "string",
+      "pattern": "([a-fA-F0-9]{16})$",
+      "min": 16,
+      "max": 16
     },
     "properties": {
       "type": [
