@@ -345,21 +345,21 @@ export class DemoComponent implements OnInit, OnDestroy, AfterViewInit {
               this.markerIconOptions.iconUrl = 'assets/img/markers/marker-icon-grey.png';
               this.marker = L.marker(new LatLng(this.geolocs[0].location.lat, this.geolocs[0].location.lng), {icon: icon(this.markerIconOptions)}).addTo(this.map);
               this.circle = L.circle(new LatLng(this.geolocs[0].location.lat, this.geolocs[0].location.lng), radius, this.circle_1).addTo(this.map);
-              this.marker.bindPopup('You are at level 5 - ' + this.deviceId).openPopup();
+              this.marker.bindPopup('You are at level ' + this.geolocs[0].level + ' - ' + this.deviceId).openPopup();
             } else if (p.value === '0000b') {
               //this.building.addTo(this.map);
               //this.beacon_1.addTo(this.map);
               this.markerIconOptions.iconUrl = 'assets/img/markers/marker-icon-blue.png';
               this.marker = L.marker(new LatLng(this.geolocs[0].location.lat, this.geolocs[0].location.lng), {icon: icon(this.markerIconOptions)}).addTo(this.map);
               this.circle = L.circle(new LatLng(this.geolocs[0].location.lat, this.geolocs[0].location.lng), radius, this.circle_2).addTo(this.map);
-              this.marker.bindPopup('You are at level 3 - ' + this.deviceId).openPopup();
+              this.marker.bindPopup('You are at level ' + this.geolocs[0].level + ' - ' + this.deviceId).openPopup();
             } else if (p.value === '0000c') {
               //this.building.addTo(this.map);
               //this.beacon_3.addTo(this.map);
               this.markerIconOptions.iconUrl = 'assets/img/markers/marker-icon-yellow.png';
               this.marker = L.marker(new LatLng(this.geolocs[0].location.lat, this.geolocs[0].location.lng), {icon: icon(this.markerIconOptions)}).addTo(this.map);
               this.circle = L.circle(new LatLng(this.geolocs[0].location.lat, this.geolocs[0].location.lng), radius, this.circle_3).addTo(this.map);
-              this.marker.bindPopup('You are at level 1 (ground) - ' + this.deviceId).openPopup();
+              this.marker.bindPopup('You are at level ' + this.geolocs[0].level + ' - ' + this.deviceId).openPopup();
             }/* else if (p.value === '00004') {
               //this.building.addTo(this.map);
               //this.room_3_1.addTo(this.map);
