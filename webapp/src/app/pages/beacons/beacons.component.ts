@@ -5,10 +5,12 @@ import {Subscription} from 'rxjs/Subscription';
 import {ToasterConfig, ToasterService} from 'angular2-toaster';
 import * as L from 'leaflet';
 import {icon, latLng, tileLayer} from 'leaflet';
+import {UserApi} from '../../shared/sdk/services/custom';
 
 @Component({
   selector: 'app-messages',
-  templateUrl: './beacons.component.html'
+  templateUrl: './beacons.component.html',
+  styleUrls: ['./beacons.component.scss']
 })
 export class BeaconsComponent implements OnInit, OnDestroy {
 
@@ -75,8 +77,8 @@ export class BeaconsComponent implements OnInit, OnDestroy {
       //tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { maxZoom: 18, attribution: '© OpenStreetMap contributors' })
       tileLayer('http://{s}.google.com/vt/lyrs=m&x={x}&y={y}&z={z}', {
         maxZoom: 21,
-        subdomains: ['mt0', 'mt1', 'mt2', 'mt3']
-      })
+        subdomains: ['mt0', 'mt1', 'mt2', 'mt3'],
+        attribution: '© OpenStreetMap contributors' })
     ],
     zoom: 5,
     center: latLng(48.856614, 2.352222),
@@ -85,13 +87,15 @@ export class BeaconsComponent implements OnInit, OnDestroy {
   };
 
   constructor(private rt: RealTime,
+              private userApi: UserApi,
               toasterService: ToasterService) {
     this.toasterService = toasterService;
   }
 
   ngOnInit(): void {
     console.log('Beacons: ngOnInit');
-
+    // Get the logged in User object
+    this.user = this.userApi.getCachedCurrent();
     // Real Time
     if (this.rt.connection.isConnected() && this.rt.connection.authenticated)
       this.setup();
@@ -103,8 +107,9 @@ export class BeaconsComponent implements OnInit, OnDestroy {
     this.cleanSetup();
 
     // Get and listen beacons
-    this.beaconRef = this.rt.FireLoop.ref<Beacon>(Beacon);
-    this.beaconSub = this.beaconRef.on('change',
+    this.userRef = this.rt.FireLoop.ref<User>(User).make(this.user);
+    this.beaconRef = this.userRef.child<Beacon>('Beacons');
+    this.beaconSub = this.rt.FireLoop.ref<Beacon>(Beacon).on('change',
       {
         limit: 1000,
         order: 'updatedAt DESC'
@@ -120,7 +125,10 @@ export class BeaconsComponent implements OnInit, OnDestroy {
    */
   onMapReady(map: L.Map): void {
     this.map = map;
-    //this.map.options.layers[0] = tileLayer('http://{s}.google.com/vt/lyrs=m&x={x}&y={y}&z={z}', { maxZoom: 21, attribution: '...' });
+    this.map.options.layers[0] = tileLayer('http://{s}.google.com/vt/lyrs=m&x={x}&y={y}&z={z}', {
+      maxZoom: 21,
+      subdomains: ['mt0', 'mt1', 'mt2', 'mt3'],
+      attribution: '© OpenStreetMap contributors' });
     /*this.map.options.zoom = 5;
     this.map.options.center = latLng(48.856614, 2.352222);
     this.map.options.trackResize = false;*/
@@ -133,7 +141,9 @@ export class BeaconsComponent implements OnInit, OnDestroy {
 
   onLocationFound(e): void {
     const radius = e.accuracy / 2;
-    this.marker = L.marker(e.latlng, {icon: icon(this.blueIconOptions)}).addTo(this.map);
+    this.marker = L.marker(e.latlng, {draggable: true, icon: icon(this.blueIconOptions)});
+    this.marker.on('dragend', (e) => this.onMarkerDragEnd(e));
+    this.map.addLayer(this.marker);
     L.circle(e.latlng, radius, this.locationOptions).addTo(this.map);
     this.marker.bindPopup('You are within <b>' + radius + '</b> meters from this point').openPopup();
   }
@@ -146,9 +156,15 @@ export class BeaconsComponent implements OnInit, OnDestroy {
     if (this.marker) {
       this.map.removeLayer(this.marker);
     }
-    this.marker = L.marker(e.latlng, {icon: icon(this.blueIconOptions)}).addTo(this.map);
-    this.marker.bindPopup('Beacon position - ' + this.beaconToAddOrEdit.id).openPopup();
+    this.marker = L.marker(e.latlng, {draggable: true, icon: icon(this.blueIconOptions)});
+    this.marker.on('dragend', (e) => this.onMarkerDragEnd(e));
+    this.map.addLayer(this.marker);
+    this.marker.bindPopup(e.latlng.lat.toFixed(5) + ', ' + e.latlng.lng.toFixed(5)).openPopup();
     this.beaconToAddOrEdit.location = e.latlng;
+  }
+
+  onMarkerDragEnd(e) {
+    this.beaconToAddOrEdit.location = e.target._latlng;
   }
 
   openAddBeaconModal(): void {
@@ -157,8 +173,13 @@ export class BeaconsComponent implements OnInit, OnDestroy {
     this.selectedTypes = [];
     // New beacon
     this.beaconToAddOrEdit = new Beacon();
+    this.beaconToAddOrEdit.type = 'sigfox';
+    this.selectedTypes.push({id: 'sigfox', itemName: 'Sigfox'});
     // Open modal
     this.addOrEditBeaconModal.show();
+    setTimeout(() => {
+      this.map.invalidateSize();
+    }, 500);
   }
 
   openEditBeaconModal(beacon: Beacon): void {
@@ -174,13 +195,20 @@ export class BeaconsComponent implements OnInit, OnDestroy {
         return;
       }
     });
-    if (this.marker) {
-      this.map.removeLayer(this.marker);
-    }
-    this.marker = L.marker(new L.LatLng(beacon.location.lat, beacon.location.lng), {icon: icon(this.blueIconOptions)}).addTo(this.map);
-    this.marker.bindPopup('Beacon position - ' + this.beaconToAddOrEdit.id).openPopup();
 
     this.addOrEditBeaconModal.show();
+
+    setTimeout(() => {
+      this.map.invalidateSize();
+      if (this.marker) {
+        this.map.removeLayer(this.marker);
+      }
+      this.map.setView(new L.LatLng(beacon.location.lat, beacon.location.lng), 20);
+      this.marker = L.marker(new L.LatLng(beacon.location.lat, beacon.location.lng), {draggable: true, icon: icon(this.blueIconOptions)});
+      this.marker.on('dragend', (e) => this.onMarkerDragEnd(e));
+      this.map.addLayer(this.marker);
+      this.marker.bindPopup('Beacon position - ' + this.beaconToAddOrEdit.id);
+    }, 500);
   }
 
   openConfirmBeaconModal(beacon: Beacon): void {
