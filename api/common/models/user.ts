@@ -24,6 +24,7 @@ const loopback = require('loopback');
   remotes: {
     loginQr: {
       accepts: [
+        {arg: 'token', type: 'string', required: true},
         {arg: 'redirect', type: 'string', required: true},
         {arg: 'res', type: 'object', http: {source: 'res'}}
       ],
@@ -39,11 +40,12 @@ class user {
   constructor(public model: any) {
   }
 
-  loginQr(redirect: string, res: any, next: Function) {
-    console.log(redirect);
-    res.location(redirect);
-    res.status(302);
-    next();
+  loginQr(token: string, redirect: string, res: any, next: Function) {
+    /*res.render('/', {
+      token: token
+    });
+    res.status(302);*/
+    next(null, {token: token});
   }
 
   afterRemoteChangePassword(ctx: any, reuslt: any, next: Function): void {

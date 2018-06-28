@@ -272,7 +272,7 @@ export class DemoComponent implements OnInit, OnDestroy, AfterViewInit {
 
   constructor(private rt: RealTime,
               private userApi: UserApi) {
-    this.deviceId = '19FC14';
+    this.deviceId = '9E1DAC';
   }
 
   ngOnInit(): void {
