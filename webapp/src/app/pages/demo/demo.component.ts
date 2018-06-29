@@ -294,7 +294,6 @@ export class DemoComponent implements OnInit, OnDestroy, AfterViewInit {
     this.setup();
 
     const headers = new HttpHeaders({'Access-Control-Allow-Origin': '*', 'Authorization': 'Basic ' + btoa('5b364cea500574349c147717:9629fe86ed11e9f127e3d498e0500136')});
-    console.log(btoa('5b364cea500574349c147717:9629fe86ed11e9f127e3d498e0500136'));
 
     let url = 'https://backend.sigfox.com/api/devices/' + this.deviceId + '/disengage';
     this.http.get(url, {headers: headers}).subscribe(res => {
@@ -379,6 +378,11 @@ export class DemoComponent implements OnInit, OnDestroy, AfterViewInit {
               this.markerIconOptions.iconUrl = 'assets/img/markers/marker-icon-yellow.png';
               this.marker = L.marker(new LatLng(this.geolocs[0].location.lat, this.geolocs[0].location.lng), {icon: icon(this.markerIconOptions)}).addTo(this.map);
               this.circle = L.circle(new LatLng(this.geolocs[0].location.lat, this.geolocs[0].location.lng), radius, this.circle_3).addTo(this.map);
+              this.marker.bindPopup('You are at level ' + this.geolocs[0].level + ' - ' + this.deviceId).openPopup();
+            } else {
+              this.markerIconOptions.iconUrl = 'assets/img/markers/marker-icon-green.png';
+              this.marker = L.marker(new LatLng(this.geolocs[0].location.lat, this.geolocs[0].location.lng), {icon: icon(this.markerIconOptions)}).addTo(this.map);
+              this.circle = L.circle(new LatLng(this.geolocs[0].location.lat, this.geolocs[0].location.lng), radius, this.circle_4).addTo(this.map);
               this.marker.bindPopup('You are at level ' + this.geolocs[0].level + ' - ' + this.deviceId).openPopup();
             }/* else if (p.value === '00004') {
               //this.building.addTo(this.map);
