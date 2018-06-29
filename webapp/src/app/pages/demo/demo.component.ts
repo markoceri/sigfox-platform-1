@@ -5,6 +5,7 @@ import {FireLoopRef, Geoloc, Message, Property, User} from '../../shared/sdk/mod
 import {Subscription} from 'rxjs/Subscription';
 import {UserApi} from '../../shared/sdk/services/custom';
 import {RealTime} from '../../shared/sdk/services';
+import {HttpClient, HttpHeaders} from '@angular/common/http';
 
 @Component({
   selector: 'app-demo',
@@ -271,8 +272,9 @@ export class DemoComponent implements OnInit, OnDestroy, AfterViewInit {
   public deviceId: string;
 
   constructor(private rt: RealTime,
+              private http: HttpClient,
               private userApi: UserApi) {
-    this.deviceId = '9E1DAC';
+    this.deviceId = '416A';
   }
 
   ngOnInit(): void {
@@ -290,6 +292,24 @@ export class DemoComponent implements OnInit, OnDestroy, AfterViewInit {
   track() {
     this.cleanMapLayers();
     this.setup();
+
+    const headers = new HttpHeaders({'Access-Control-Allow-Origin': '*', 'Authorization': 'Basic ' + btoa('5b364cea500574349c147717:9629fe86ed11e9f127e3d498e0500136')});
+    console.log(btoa('5b364cea500574349c147717:9629fe86ed11e9f127e3d498e0500136'));
+
+    let url = 'https://backend.sigfox.com/api/devices/' + this.deviceId + '/disengage';
+    this.http.get(url, {headers: headers}).subscribe(res => {
+      console.log(res);
+    }, err => {
+      console.log(err);
+    });
+
+    url = 'https://backend.sigfox.com/api/devicetypes/5ab90f3b5005745a1e123488/disengage';
+    this.http.get(url, {headers: headers}).subscribe(res => {
+      console.log(res);
+    }, err => {
+      console.log(err);
+    });
+
     this.inputModal.hide();
   }
 
