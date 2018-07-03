@@ -225,6 +225,9 @@ export class CustomDashboardComponent implements OnInit, OnDestroy {
       animation: 'fade'
     });
 
+  private messageGraphSub: Subscription;
+  private messageGraphRef: FireLoopRef<Message>;
+
   constructor(private rt: RealTime,
               private userApi: UserApi,
               private messageApi: MessageApi,
@@ -369,6 +372,7 @@ export class CustomDashboardComponent implements OnInit, OnDestroy {
     if (this.organizationRef) this.organizationRef.dispose();
     if (this.userRef) this.userRef.dispose();
     if (this.dashboardRef) this.dashboardRef.dispose();
+    if (this.messageGraphRef) this.messageGraphRef.dispose();
   }
 
   cancel(): void {
@@ -622,7 +626,8 @@ export class CustomDashboardComponent implements OnInit, OnDestroy {
               include: [{
                 relation: 'Geolocs',
                 scope: {
-                  limit: 5
+                  order: 'type ASC',
+                  limit: 1
                 }
               }]
             }
@@ -1312,11 +1317,17 @@ export class CustomDashboardComponent implements OnInit, OnDestroy {
                   widget.options.chartLabels = [];
 
                   // Messages
-                  this.messageApi.stats(
+                  /*this.messageApi.stats(
                     widget.options.period,
                     {},
-                    {deviceId: device.id}
-                  ).subscribe((stats: any) => {
+                    {deviceId: device.id}*/
+                  this.messageGraphRef = this.rt.FireLoop.ref<Message>(Message);
+                  this.subscriptions.push(this.messageGraphRef.stats(
+                    {
+                      range: widget.options.period,
+                      where: {deviceId: device.id}
+                    }
+                  ).subscribe((stats: any[]) => {
                     widget.options.chartLabels = [];
                     widget.options.chartOptions = {
                       responsive: true,
@@ -1330,7 +1341,7 @@ export class CustomDashboardComponent implements OnInit, OnDestroy {
                     widget.data = [];
                     const data = [];
 
-                    //console.log('Stats: ', stats);
+                    console.log('Stats: ', stats);
 
                     stats.forEach((stat: any) => {
                       data.push(stat.count);
@@ -1349,15 +1360,13 @@ export class CustomDashboardComponent implements OnInit, OnDestroy {
                     // console.log('Labels:', widget.options.chartLabels);
                     widget.data.push({data: data, label: 'Messages'});
 
-                    widget.options.hasNoMessageChartData = data.every(value => {
+                    /*widget.options.hasNoMessageChartData = data.every(value => {
                       return value === 0;
-                    });
-                  });
-
+                    });*/
+                  }));
 
                 });
               }
-
               //console.log('Widget loaded', widget);
               widget.ready = true;
             });
@@ -1378,7 +1387,6 @@ export class CustomDashboardComponent implements OnInit, OnDestroy {
     device.Messages = [];
 
     if (device.visibility) {
-      //const widgetFilter = widget.filter.getInitialState();
       const widgetFilter = Object.assign({}, widget.filter);
       widgetFilter.where = {id: device.id};
       widgetFilter.include[0].scope.limit = 1000;
@@ -1468,7 +1476,7 @@ export class CustomDashboardComponent implements OnInit, OnDestroy {
     }
   }
 
-// Map functions
+  // Map functions
   setCircles() {
     for (let i = 0; i < this.devices.length; i++) {
       this.isCircleVisible.push(false);
