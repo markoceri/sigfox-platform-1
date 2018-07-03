@@ -162,7 +162,6 @@ class Geoloc {
                   this.updateDeviceLocatedAt(geolocInstance.deviceId);
                 } else {
                   console.log('Skipped geoloc creation.');
-
                 }
               }
             });
