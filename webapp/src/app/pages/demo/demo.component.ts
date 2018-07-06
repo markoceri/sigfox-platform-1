@@ -95,7 +95,7 @@ export class DemoComponent implements OnInit, OnDestroy, AfterViewInit {
       })
     ],
     zoom: 20,
-    center: latLng(51.480487, -0.440390),
+    center: latLng(51.480465, -0.439156),
     fullscreenControl: true,
     trackResize: false
   };
@@ -425,9 +425,12 @@ export class DemoComponent implements OnInit, OnDestroy, AfterViewInit {
 
   loadMapElements() {
 
-    const imageUrl = '../assets/img/buildings/office.png';
-    const imageBounds: L.LatLngBoundsExpression = [[51.480659, -0.440732], [51.480297, -0.440000]];
-    //const imageBounds: L.LatLngBoundsExpression = [[51.480656, -0.440703], [51.480551, -0.440069], [51.480300, -0.439986], [51.480309, -0.440737]];
+    let imageUrl = '../assets/img/buildings/office.png';
+    let imageBounds: L.LatLngBoundsExpression = [[51.480659, -0.440732], [51.480297, -0.440000]];
+    L.imageOverlay(imageUrl, imageBounds).setOpacity(1).addTo(this.building);
+
+    imageUrl = '../assets/img/buildings/office_new.png';
+    imageBounds = [[51.480694, -0.439601], [51.480249, -0.438823]];
     L.imageOverlay(imageUrl, imageBounds).setOpacity(1).addTo(this.building);
 
     this.beacon_1 = L.geoJSON(this.beacon_1).setStyle({
