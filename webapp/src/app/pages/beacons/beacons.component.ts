@@ -86,8 +86,14 @@ export class BeaconsComponent implements OnInit, OnDestroy {
     trackResize: false
   };
 
-
   private admin = false;
+
+  private building: L.LayerGroup = new L.LayerGroup();
+  public layersControl = {
+    baseLayers: {
+      'Building': this.building,
+    }
+  };
 
   constructor(private rt: RealTime,
               private userApi: UserApi,
@@ -160,6 +166,15 @@ export class BeaconsComponent implements OnInit, OnDestroy {
     this.map.on('locationfound', (e) => this.onLocationFound(e));
     this.map.on('locationerror', (e) => this.onLocationError(e));
     this.map.on('click', (e) => this.onMapClick(e));
+
+    let imageUrl = '../assets/img/buildings/office.png';
+    let imageBounds: L.LatLngBoundsExpression = [[51.480659, -0.440732], [51.480297, -0.440000]];
+    L.imageOverlay(imageUrl, imageBounds).setOpacity(1).addTo(this.building);
+    imageUrl = '../assets/img/buildings/office_new.png';
+    imageBounds = [[51.480694, -0.439601], [51.480249, -0.438823]];
+    L.imageOverlay(imageUrl, imageBounds).setOpacity(1).addTo(this.building);
+    // Set office building plans
+    this.building.addTo(this.map);
     console.log('Map ready!');
   }
 
