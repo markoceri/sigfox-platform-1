@@ -57,7 +57,7 @@ class Geoloc {
 
     // Build the GPS Geoloc object
     const geoloc_gps = new Geoloc;
-    geoloc_gps.location = new loopback.GeoPoint({lat: 0, lng: 0});
+    geoloc_gps.location = new loopback.GeoPoint({lat: null, lng: null});
     geoloc_gps.createdAt = message.createdAt;
     geoloc_gps.userId = message.userId;
     geoloc_gps.messageId = message.id;
@@ -65,7 +65,7 @@ class Geoloc {
 
     // Build the Beacon Geoloc object
     const geoloc_beacon = new Geoloc;
-    geoloc_beacon.location = new loopback.GeoPoint({lat: 0, lng: 0});
+    geoloc_beacon.location = new loopback.GeoPoint({lat: null, lng: null});
     geoloc_beacon.createdAt = message.createdAt;
     geoloc_beacon.userId = message.userId;
     geoloc_beacon.messageId = message.id;
@@ -73,10 +73,10 @@ class Geoloc {
 
     message.data_parsed.forEach((p: any) => {
       // Check if there is GPS geoloc in parsed data
-      if (p.key === 'lat' && p.value >= -90 && p.value <= 90) {
+      if (p.key === 'lat' && p.value && p.value >= -90 && p.value <= 90) {
         hasGpsLocation = true;
         geoloc_gps.location.lat = p.value;
-      } else if (p.key === 'lng' && p.value >= -180 && p.value <= 180) {
+      } else if (p.key === 'lng' && p.value && p.value >= -180 && p.value <= 180) {
         geoloc_gps.location.lng = p.value;
       }
       // Check if there is Beacon geoloc in parsed data
@@ -106,6 +106,7 @@ class Geoloc {
         {
           where: {
             and: [
+              {location: geoloc_gps.location},
               {type: geoloc_gps.type},
               {createdAt: geoloc_gps.createdAt},
               {userId: geoloc_gps.userId},
@@ -145,6 +146,7 @@ class Geoloc {
             {
               where: {
                 and: [
+                  {location: geoloc_beacon.location},
                   {type: geoloc_beacon.type},
                   {createdAt: geoloc_beacon.createdAt},
                   {userId: geoloc_beacon.userId},
@@ -233,8 +235,12 @@ class Geoloc {
           Geoloc.findOrCreate(
             {where: {
                 and: [
+                  {location: geoloc.location},
                   {type: geoloc.type},
-                  {messageId: geoloc.messageId}
+                  {createdAt: geoloc.createdAt},
+                  {userId: geoloc.userId},
+                  {messageId: geoloc.messageId},
+                  {deviceId: geoloc.deviceId}
                 ]
               }
             }, // find
