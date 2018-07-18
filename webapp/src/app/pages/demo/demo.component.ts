@@ -354,7 +354,7 @@ export class DemoComponent implements OnInit, OnDestroy, AfterViewInit {
         this.map.flyTo(new LatLng(this.geolocs[0].location.lat, this.geolocs[0].location.lng));
         this.map.setZoom(20);
 
-        const radius = this.geolocs[0].precision;
+        const radius = this.geolocs[0].accuracy;
 
         this.geolocs[0].Message.data_parsed.forEach((p: Property) => {
           if (p.key === 'beaconId') {

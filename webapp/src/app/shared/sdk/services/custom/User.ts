@@ -3230,6 +3230,8 @@ export class UserApi extends BaseLoopBackApi {
          * (The remote method definition does not provide any description.)
          * </em>
    *
+   * @param {string} token 
+   *
    * @param {string} redirect 
    *
    * @param {object} res 
@@ -3242,13 +3244,14 @@ export class UserApi extends BaseLoopBackApi {
    *
    *  - `result` – `{any}` - 
    */
-  public loginQr(redirect: any, res: any = {}, customHeaders?: Function): Observable<any> {
+  public loginQr(token: any, redirect: any, res: any = {}, customHeaders?: Function): Observable<any> {
     let _method: string = "GET";
     let _url: string = LoopBackConfig.getPath() + "/" + LoopBackConfig.getApiVersion() +
     "/users/login/qr";
     let _routeParams: any = {};
     let _postBody: any = {};
     let _urlParams: any = {};
+    if (typeof token !== 'undefined' && token !== null) _urlParams.token = token;
     if (typeof redirect !== 'undefined' && redirect !== null) _urlParams.redirect = redirect;
     let result = this.request(_method, _url, _routeParams, _urlParams, _postBody, null, customHeaders);
     return result;

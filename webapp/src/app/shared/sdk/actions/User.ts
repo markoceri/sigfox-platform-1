@@ -4513,6 +4513,7 @@ Object.assign(BaseLoopbackActionsFactory<User>(UserActionTypes), {
          * (The remote method definition does not provide any description.)
          * </em>
    *
+   * @param {string} token 
    * @param {string} redirect 
    * @param {object} res 
    * @param {any} meta (optional).
@@ -4520,10 +4521,10 @@ Object.assign(BaseLoopbackActionsFactory<User>(UserActionTypes), {
    */
   loginQr: class implements Action {
     public readonly type = UserActionTypes.LOGIN_QR;
-      public payload: {redirect: any, res: any, customHeaders};
+      public payload: {token: any, redirect: any, res: any, customHeaders};
 
-    constructor(redirect: any, res: any = {}, customHeaders?: Function, public meta?: any) {
-      this.payload = {redirect, res, customHeaders};
+    constructor(token: any, redirect: any, res: any = {}, customHeaders?: Function, public meta?: any) {
+      this.payload = {token, redirect, res, customHeaders};
     }
   },
   /**

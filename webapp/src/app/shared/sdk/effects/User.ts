@@ -1480,7 +1480,7 @@ export class UserEffects extends BaseLoopbackEffects {
   public loginQr$ = this.actions$
     .ofType(UserActionTypes.LOGIN_QR).pipe(
       mergeMap((action: LoopbackAction) =>
-        this.user.loginQr(action.payload.redirect, action.payload.res).pipe(
+        this.user.loginQr(action.payload.token, action.payload.redirect, action.payload.res).pipe(
           map((response: any) => new UserActions.loginQrSuccess(action.payload.id, response, action.meta)),
           catchError((error: any) => concat(
             of(new UserActions.loginQrFail(error, action.meta)),
