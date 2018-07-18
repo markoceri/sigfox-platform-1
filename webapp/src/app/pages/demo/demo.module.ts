@@ -23,5 +23,4 @@ import {ModalModule} from 'ngx-bootstrap';
     DataFilterPipe
   ]
 })
-export class DemoModule {
-}
+export class DemoModule {}

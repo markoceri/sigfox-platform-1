@@ -71,31 +71,43 @@ class Geoloc {
     geoloc_beacon.messageId = message.id;
     geoloc_beacon.deviceId = message.deviceId;
 
+    // Build the WiFi Geoloc object
+    const geoloc_wifi = new Geoloc;
+    geoloc_wifi.location = new loopback.GeoPoint({lat: null, lng: null});
+    geoloc_wifi.createdAt = message.createdAt;
+    geoloc_wifi.userId = message.userId;
+    geoloc_wifi.messageId = message.id;
+    geoloc_wifi.deviceId = message.deviceId;
+    geoloc_wifi.wifiAccessPoints = [];
+
     message.data_parsed.forEach((p: any) => {
-      // Check if there is GPS geoloc in parsed data
-      if (p.key === 'lat' && p.value && p.value >= -90 && p.value <= 90) {
-        hasGpsLocation = true;
-        geoloc_gps.location.lat = p.value;
-      } else if (p.key === 'lng' && p.value && p.value >= -180 && p.value <= 180) {
-        geoloc_gps.location.lng = p.value;
-      }
-      // Check if there is Beacon geoloc in parsed data
-      else if (p.key === 'beaconId') {
-        hasBeaconLocation = true;
-        geoloc_beacon.id = p.value.toString().toUpperCase();
-      }
-      // Check if there is accuracy in parsed data
-      else if (p.key === 'accuracy' || p.key === 'precision') {
-        geoloc_beacon.accuracy = p.value;
-      }
-      // Check if there is Beacon geoloc in parsed data
-      else if (p.key === 'wifi_mac_1') {
-        hasWifiLocation = true;
-
-      }
-      // Check if there is Beacon geoloc in parsed data
-      else if (p.key === 'wifi_mac_2') {
-
+      if (p.value !== null && typeof p.value !== 'undefined') {
+        // Check if there is GPS geoloc in parsed data
+        if (p.key === 'lat' && p.value >= -90 && p.value <= 90) {
+          hasGpsLocation = true;
+          geoloc_gps.location.lat = p.value;
+        } else if (p.key === 'lng' && p.value >= -180 && p.value <= 180) {
+          geoloc_gps.location.lng = p.value;
+        }
+        // Check if there is Beacon geoloc in parsed data
+        else if (p.key === 'beaconId') {
+          hasBeaconLocation = true;
+          geoloc_beacon.id = p.value.toString().toUpperCase();
+        }
+        // Check if there is accuracy in parsed data
+        else if (p.key === 'accuracy' || p.key === 'precision') {
+          geoloc_beacon.accuracy = p.value;
+          geoloc_wifi.accuracy = p.value;
+        }
+        // Check if there is WiFi geoloc in parsed data
+        else if (p.key.includes('wlan_')) {
+          hasWifiLocation = true;
+          if (p.unit && p.unit !== '') {
+            geoloc_wifi.wifiAccessPoints.push({macAddress: p.value.toString(), signalStrength: Number(p.unit)});
+          } else {
+            geoloc_wifi.wifiAccessPoints.push({macAddress: p.value.toString()});
+          }
+        }
       }
     });
 
@@ -172,6 +184,66 @@ class Geoloc {
         }
       });
     }
+
+    if (hasWifiLocation) {
+      if (process.env.HERE_APP_ID && process.env.HERE_APP_CODE) {
+        // Call HERE coordinates provider
+        const wlans: any = {
+          wlan: []
+        };
+        geoloc_wifi.wifiAccessPoints.forEach((wifiAccessPoint: any) => {
+          console.log(wifiAccessPoint);
+          if (wifiAccessPoint.signalStrength) {
+            wlans.wlan.push({mac: wifiAccessPoint.macAddress, powrx: wifiAccessPoint.signalStrength});
+          } else {
+            wlans.wlan.push({mac: wifiAccessPoint.macAddress});
+          }
+        });
+
+        this.model.app.dataSources.here.locate(process.env.HERE_APP_ID, process.env.HERE_APP_CODE, wlans).then((result: any) => {
+          console.log(result);
+
+          geoloc_wifi.location.lat = result.location.lat;
+          geoloc_wifi.location.lng = result.location.lng;
+          geoloc_wifi.accuracy = result.location.accuracy;
+
+          geoloc_wifi.type = 'wifi';
+          // Find or create a new Geoloc
+          Geoloc.findOrCreate(
+            {
+              where: {
+                and: [
+                  {location: geoloc_wifi.location},
+                  {type: geoloc_wifi.type},
+                  {createdAt: geoloc_wifi.createdAt},
+                  {userId: geoloc_wifi.userId},
+                  {messageId: geoloc_wifi.messageId},
+                  {deviceId: geoloc_wifi.deviceId}
+                ]
+              }
+            },
+            geoloc_wifi,
+            (err: any, geolocInstance: any, created: boolean) => {
+              if (err) {
+                console.error(err);
+              } else {
+                if (created) {
+                  console.log('Created geoloc as: ', geolocInstance);
+                  // Update device in order to trigger a real time upsert event
+                  this.updateDeviceLocatedAt(geolocInstance.deviceId);
+                } else {
+                  console.log('Skipped geoloc creation.');
+                }
+              }
+            });
+        }).catch((err: any) => {
+          if (err) console.error(err);
+        });
+
+      } else {
+        console.error('Trying to position with WiFi but no service provider has been set - check your environment variables!');
+      }
+    }
   }
 
   postSigfox(req: any, data: any, next: Function): void {
@@ -187,10 +259,10 @@ class Geoloc {
       || typeof data.seqNumber === 'undefined') {
       next('Missing "geoloc", "deviceId", "time" and "seqNumber"', data);
     }
-    // Obtain the userId with the access token of ctx
+// Obtain the userId with the access token of ctx
     const userId = req.accessToken.userId;
 
-    // Find the corresponding message in order to retrieve its message ID
+// Find the corresponding message in order to retrieve its message ID
     Message.findOne({
       where: {
         and: [
