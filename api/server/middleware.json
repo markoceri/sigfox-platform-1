@@ -1,7 +1,7 @@
 {
   "initial:before": {
     "loopback#favicon": {
-      "params": "$!../server/views/favicon.ico"
+      "params": "$!../../webapp/src/favicon.ico"
     }
   },
   "initial": {
@@ -43,6 +43,11 @@
       "paths": [
         "${restApiRoot}"
       ]
+    }
+  },
+  "files": {
+    "loopback#static": {
+      "params": "$!../../webapp/dist"
     }
   },
   "final": {
