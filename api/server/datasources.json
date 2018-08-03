@@ -159,11 +159,8 @@
     "operations": [
       {
         "template": {
-          "method": "POST",
-          "url": "https://maps.googleapis.com/maps/api/place/nearbysearch/json?location={latitude:number},{longitude:number}&radius={accuracy: number}&key={key:string}",
-          "headers": {
-            "Content-Type": "application/json"
-          }
+          "method": "GET",
+          "url": "https://maps.googleapis.com/maps/api/place/nearbysearch/json?location={latitude:number},{longitude:number}&radius={accuracy:number}&key={key:string}"
         },
         "functions": {
           "locate": [
