@@ -41,10 +41,7 @@ class Alexa {
 
     // TODO: accept only Amazon Alexa req
 
-    console.log(body);
-    console.log('---------------------------------------------------------------------------');
-    console.log('---------------------------------------------------------------------------');
-    console.log('---------------------------------------------------------------------------');
+    //console.log(body);
 
     let response: any = {};
     if (body.request.type === 'LaunchRequest') {
@@ -98,7 +95,7 @@ class Alexa {
           sessionAttributes: {}
         };
 
-        Device.findOne({where: {name: {like: deviceName}}}, (err: any, deviceInstance: any) => {
+        Device.findOne({where: {name: {regexp: '/' + deviceName + '/i'}}}, (err: any, deviceInstance: any) => {
           if (err) {
             console.error(err);
             next(null, response);
