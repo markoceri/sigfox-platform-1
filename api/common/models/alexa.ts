@@ -108,9 +108,9 @@ class Alexa {
                 response.response.reprompt.outputSpeech.text = 'Error, no geoloc found.';
                 next(null, response);
               } else if (geolocInstance) {
-                response.response.outputSpeech.text = 'Your device is here: ' + geolocInstance.location.lat + ', ' + geolocInstance.location.lng;
-                response.response.card.content = 'Your device is here: ' + geolocInstance.location.lat + ', ' + geolocInstance.location.lng;
-                response.response.reprompt.outputSpeech.text = 'Your device is here: ' + geolocInstance.location.lat + ', ' + geolocInstance.location.lng;
+                response.response.outputSpeech.text = 'Your ' + deviceInstance.name + ' is here: ' + geolocInstance.location.lat + ', ' + geolocInstance.location.lng;
+                response.response.card.content = 'Your ' + deviceInstance.name + ' is here: ' + geolocInstance.location.lat + ', ' + geolocInstance.location.lng;
+                response.response.reprompt.outputSpeech.text = 'Your ' + deviceInstance.name + ' is here: ' + geolocInstance.location.lat + ', ' + geolocInstance.location.lng;
                 next(null, response);
               } else {
                 response.response.outputSpeech.text = 'Error, no geoloc found.';
