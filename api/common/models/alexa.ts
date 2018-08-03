@@ -100,7 +100,7 @@ class Alexa {
             console.error(err);
             next(null, response);
           } else if (deviceInstance) {
-            Geoloc.findOne({where: {id: deviceInstance.id}, order: 'createdAt DESC'}, (err: any, geolocInstance: any) => {
+            Geoloc.findOne({where: {deviceId: deviceInstance.id}, order: 'createdAt DESC'}, (err: any, geolocInstance: any) => {
               if (err) {
                 console.error(err);
                 response.response.outputSpeech.text = 'Error, no geoloc found.';
