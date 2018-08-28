@@ -13,7 +13,7 @@
     "preinstall": "cd api/ && npm install && cd ../webapp && npm install && cd ..",
     "postinstall": "npm run build",
     "build": "cd webapp/ && npm cache verify && npm run build && cd ..",
-    "start": "npm run serve",
+    "start": "npm run api",
     "api": "cd api/ && node server/server.js && cd ..",
     "webapp": "cd webapp/ && node server/server.ts && cd ..",
     "test": "npm run install"
