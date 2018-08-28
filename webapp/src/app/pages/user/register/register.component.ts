@@ -42,7 +42,7 @@ export class RegisterComponent {
       this.onLogin();
     }, err => {
       // console.log(err);
-      if (err.statusCode === 422)
+      if (err.error.statusCode === 422)
         this.errorMessage = 'Email already taken.';
       else
         this.errorMessage = 'Invalid username or password.';
@@ -73,9 +73,9 @@ export class RegisterComponent {
         this.router.navigate(['/']);
       }, err => {
         // console.log(err);
-        if (err.statusCode === 401) {
+        if (err.error.statusCode === 401) {
           this.errorMessage = 'Invalid username or password.';
-        } else if (err.statusCode === 500) {
+        } else if (err.error.statusCode === 500) {
           this.errorMessage = 'Internal server error';
         } else {
           this.errorMessage = err.message;
